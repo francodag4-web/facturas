@@ -2,54 +2,114 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1e3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Facturas">
 <title>Facturas</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e3a5f'/%3E%3Cpath d='M20 16h24M20 28h24M20 40h14' stroke='%235fd4c0' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-:root{--franja:#c9ece6;--titulo:#e07a3c;--tabla:#ecea8a;--marco:#3b6fd1;--borde:#222;--font:Arial,Helvetica,sans-serif}
+:root{
+  --franja:#c9ece6;--titulo:#e07a3c;--tabla:#ecea8a;--marco:#3b6fd1;--borde:#222;--font:Arial,Helvetica,sans-serif;
+  --ink:#16202e;--muted:#6b7686;--line:#e4e8ee;--bg:#f2f4f8;--card:#fff;--brand:#1e3a5f;--accent:#16917a;--accent2:#5fd4c0;--pri:#2457d6;--warn:#b35c00;--danger:#c0362c;
+  --r:14px;--sh:0 1px 2px rgba(16,24,40,.05),0 4px 16px rgba(16,24,40,.06);
+}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{font-family:"Segoe UI",system-ui,Arial,sans-serif;background:#eceef2;color:#1d1d1f;font-size:14px}
-.app{display:grid;grid-template-columns:350px 1fr;height:100vh}
-aside{background:#fff;border-right:1px solid #dcdde3;overflow:auto}
-.tabs{display:flex;position:sticky;top:0;background:#fff;z-index:3;border-bottom:1px solid #e4e4ea}
-.tabs button{flex:1;padding:12px 2px;border:0;background:none;cursor:pointer;font-size:12.5px;color:#666;border-bottom:2px solid transparent}
-.tabs button.on{color:#111;font-weight:600;border-color:#3b6fd1}
-.panel{display:none;padding:6px 16px 24px}.panel.on{display:block}
-.panel h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:#3b6fd1;margin:18px 0 4px}
-.panel label{display:block;font-size:12px;color:#666;margin:9px 0 3px}
-.panel input:not([type=color]):not([type=checkbox]),.panel select,.panel textarea{width:100%;padding:7px 9px;border:1px solid #d4d5dc;border-radius:7px;font:inherit;font-size:13.5px;background:#fff}
+body{font-family:"Segoe UI",-apple-system,system-ui,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+.ic{width:18px;height:18px;flex:none}
+/* ---------- barra superior ---------- */
+.topbar{position:sticky;top:0;z-index:20;height:60px;display:flex;align-items:center;gap:10px;padding:0 14px;padding-top:env(safe-area-inset-top);background:linear-gradient(90deg,#1a3354,#1e3a5f 60%,#22476f);color:#fff;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.iconbtn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:0;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.iconbtn:hover{background:rgba(255,255,255,.2)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),#3b82f6);display:grid;place-items:center;flex:none}
+.mark svg{width:20px;height:20px}
+.brand b{font-size:16px;letter-spacing:.01em;display:block}
+.brand small{display:block;font-size:12px;opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.topbar .sp{flex:1}
+.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;font-size:12.5px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;white-space:nowrap}
+.chip.warn{background:#ffedd5;color:#8a4b00;border-color:#fdba74}
+.chip.ok{background:rgba(95,212,192,.18);border-color:rgba(95,212,192,.5)}
+.estado{font-size:12.5px;opacity:.85;white-space:nowrap}
+.estado.dirty{color:#fcd34d;opacity:1}
+.tb-act{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #d5dae3;background:#fff;border-radius:10px;padding:8px 13px;cursor:pointer;font-size:13.5px;color:var(--ink);white-space:nowrap;transition:background .15s,box-shadow .15s}
+.btn:hover{background:#f5f7fb}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff;box-shadow:0 2px 6px rgba(36,87,214,.3)}.btn.pri:hover{background:#1c48b8}
+.btn.acc{background:var(--accent);border-color:var(--accent);color:#fff}.btn.acc:hover{background:#0f7a66}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:8px}
+.btn.del{color:var(--danger)}
+.btn.block{width:100%}
+/* ---------- layout ---------- */
+.layout{display:flex;height:calc(100vh - 60px);height:calc(100dvh - 60px)}
+aside{width:380px;flex:none;background:var(--card);border-right:1px solid var(--line);overflow:auto;transition:margin .25s ease,transform .25s ease}
+body.closed aside{margin-left:-380px}
+.dhead{display:none}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 2px;border:1px solid transparent;border-radius:12px;background:none;cursor:pointer;font-size:11.5px;color:var(--muted)}
+.nav button .ic{width:20px;height:20px}
+.nav button:hover{background:#f4f6fa}
+.nav button.on{background:#eaf1ff;color:var(--pri);border-color:#cfdcfb;font-weight:600}
+.panel{display:none;padding:4px 16px 28px}.panel.on{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.ptitle{font-size:19px;font-weight:700;margin:16px 0 2px}
+.psub{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.45}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:12px;box-shadow:var(--sh)}
+.card h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.panel label{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 4px;font-weight:500}
+.panel input:not([type=color]):not([type=checkbox]):not([type=file]),.panel select,.panel textarea{width:100%;padding:9px 11px;border:1px solid #d5dae3;border-radius:10px;font:inherit;font-size:14px;background:#fbfcfe;transition:border .15s,box-shadow .15s}
+.panel input:focus,.panel select:focus,.panel textarea:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px rgba(36,87,214,.12);background:#fff}
 .panel textarea{resize:vertical}
-.hint{font-size:12px;color:#888;margin:6px 0 0;line-height:1.4}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.colors{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
-.colors label{display:flex;align-items:center;gap:8px;margin:6px 0}
-.colors input{width:34px;height:26px;border:1px solid #ccc;border-radius:5px;padding:0;background:none}
-.btn{border:1px solid #cfd1d8;background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px;color:#222}
-.btn:hover{background:#f4f6fb}
-.btn.pri{background:#1f5fd6;border-color:#1f5fd6;color:#fff}.btn.pri:hover{background:#174fb8}
-.btn.sm{padding:4px 8px;font-size:12px}
-.btn.del{color:#b3261e}
-.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.list{margin-top:8px;border:1px solid #e4e4ea;border-radius:8px;max-height:60vh;overflow:auto}
-.item{padding:9px 10px;border-bottom:1px solid #eee;font-size:13px}
-.item:last-child{border-bottom:0}
-.item .top{display:flex;justify-content:space-between;gap:8px}
-.item .sub{color:#777;font-size:12px;margin-top:2px}
-.item .act{display:flex;gap:5px;margin-top:6px}
-.item.cur{background:#eef4ff}
-.cat{display:grid;grid-template-columns:1fr 80px 28px;gap:6px;margin-top:6px}
-main{overflow:auto;padding:16px 16px 40px}
-.toolbar{width:210mm;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.toolbar .sp{flex:1}
-.estado{font-size:12px;color:#777}
-.estado.dirty{color:#b35c00}
-.btn.warn{background:#fff4e5;border-color:#f0b35c;color:#8a4b00}
-.btn.ok{color:#1b6b3a;border-color:#b9dcc6}
-.toolbar select{padding:7px;border:1px solid #cfd1d8;border-radius:8px;font:inherit;font-size:13px;max-width:210px}
-
+.hint{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.45}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.savebar{position:sticky;bottom:0;background:linear-gradient(transparent,#fff 30%);padding:18px 0 4px;margin-top:6px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.kpi{border-radius:var(--r);padding:13px;color:#fff;box-shadow:var(--sh)}
+.kpi span{font-size:12px;opacity:.85;display:block}
+.kpi b{font-size:20px;display:block;margin-top:3px;letter-spacing:-.01em}
+.kpi small{font-size:11.5px;opacity:.8}
+.k1{background:linear-gradient(135deg,#1e3a5f,#2f5d8f)}.k2{background:linear-gradient(135deg,#0f7a66,#16a58b)}.k3{background:linear-gradient(135deg,#6d4bd1,#8b6cf0)}.k4{background:linear-gradient(135deg,#c2410c,#ea7a2f)}
+.check{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px dashed var(--line);cursor:pointer;font-size:13.5px}
+.check:last-child{border:0}
+.check i{width:22px;height:22px;border-radius:50%;border:2px solid #cbd3df;display:grid;place-items:center;flex:none;font-style:normal;font-size:12px;color:#fff}
+.check.done i{background:var(--accent);border-color:var(--accent)}
+.check.done span{color:var(--muted);text-decoration:line-through}
+.list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff;transition:border .15s,box-shadow .15s}
+.item:hover{border-color:#cdd6e4;box-shadow:var(--sh)}
+.item.cur{border-color:var(--pri);background:#f5f8ff}
+.item .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item .sub{color:var(--muted);font-size:12.5px;margin-top:3px}
+.item .act{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.item .amt{font-weight:700}
+.av{width:34px;height:34px;border-radius:50%;background:#e7eefc;color:var(--pri);display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.who{display:flex;gap:10px;align-items:center;min-width:0}
+.who div{min-width:0}
+.empty-st{text-align:center;color:var(--muted);padding:22px 10px;border:1px dashed #d5dae3;border-radius:12px;font-size:13px}
+.presets{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin-top:8px}
+.preset{border:2px solid var(--line);border-radius:12px;padding:8px;cursor:pointer;background:#fff;text-align:left;font-size:12.5px}
+.preset:hover{border-color:#b9c6da}
+.preset .sw{display:flex;height:24px;border-radius:6px;overflow:hidden;margin-bottom:6px}
+.preset .sw i{flex:1}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.seg button{padding:9px;border:2px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}
+.seg button.on{border-color:var(--pri);background:#eaf1ff;color:var(--pri);font-weight:600}
+.colors{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+.colors label{display:flex!important;align-items:center;gap:8px;margin:5px 0!important;color:var(--ink)!important}
+.colors input{width:36px;height:28px;border:1px solid #d5dae3;border-radius:7px;padding:0;background:none;cursor:pointer}
+.cat{display:grid;grid-template-columns:1fr 86px 36px;gap:6px;margin-top:8px}
+.next{font-size:22px;font-weight:700;color:var(--brand);margin-top:4px}
+.overlay{display:none}
+main{flex:1;overflow:auto;padding:22px 18px 60px}
+.bottombar{display:none}
 /* ---------- HOJA A4 ---------- */
-.sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.12);padding:12mm 13mm 12mm;font-family:var(--font);font-size:10pt;color:#111;display:flex;flex-direction:column;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.sheet input,.sheet textarea{font:inherit;color:inherit;border:1px dashed transparent;background:transparent;border-radius:3px;padding:1px 3px;width:100%;outline:none}
+.sheet{width:210mm;min-height:297mm;margin:0 auto;background:#fff;box-shadow:0 10px 40px rgba(16,24,40,.12),0 1px 3px rgba(16,24,40,.08);border-radius:4px;padding:12mm 13mm;font-family:var(--font);font-size:10pt;color:#111;display:flex;flex-direction:column;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.sheet input,.sheet textarea,.sheet select{font:inherit;color:inherit;border:1px dashed transparent;background:transparent;border-radius:4px;padding:1px 3px;width:100%;outline:none}
 .sheet input:hover,.sheet textarea:hover{border-color:#c4d3ee}
 .sheet input:focus,.sheet textarea:focus{background:#f1f6ff;border-color:#8fb0ea}
 .sheet textarea{resize:none;overflow:hidden;display:block}
@@ -57,10 +117,10 @@ main{overflow:auto;padding:16px 16px 40px}
 .band input{text-align:center;color:var(--titulo);font-size:17pt;letter-spacing:.06em}
 .head{display:grid;grid-template-columns:1fr 1.15fr;gap:7mm;margin-bottom:5mm;align-items:end}
 .logo{max-height:22mm;max-width:60mm;display:block;margin-bottom:3mm}
-.logo:not([src]),.logo[src=""]{display:none}
+.logo:not([src]){display:none}
 .emisor{line-height:1.45;font-size:9.5pt;margin-bottom:4mm;white-space:pre-line}
 .emisor b{font-size:10.5pt}
-.emisor .vacio{color:#b35c00;font-style:italic}
+.emisor .vacio{color:var(--warn);font-style:italic;cursor:pointer;font-family:"Segoe UI",system-ui,sans-serif}
 .boxes{display:grid;grid-template-columns:1.2fr 1fr;gap:3mm}
 .box{border:1.6px solid var(--marco);border-radius:3mm;padding:1.5mm 3mm;text-align:center}
 .box .lbl{display:block;font-size:6.5pt;color:var(--marco);font-weight:700;letter-spacing:.03em}
@@ -68,9 +128,12 @@ main{overflow:auto;padding:16px 16px 40px}
 .ftxt{display:none}
 .client{border:1.6px solid var(--marco);border-radius:4mm;padding:3mm 4mm}
 .crow{display:grid;grid-template-columns:24mm 1fr;align-items:center;font-size:8.5pt}
-.crow span{color:#333}
 .crow input{font-size:9pt}
 .crow input[data-c=nombre]{font-weight:700}
+.cbar{display:flex;gap:6px;margin-top:2mm;font-family:"Segoe UI",system-ui,sans-serif}
+.cbar select{flex:1;border:1px solid #d5dae3!important;border-radius:8px!important;padding:4px 6px!important;font-size:12px!important;background:#f8fafc!important;cursor:pointer}
+.mini{border:1px solid #cfdcfb;background:#eef3ff;color:var(--pri);border-radius:8px;padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+.mini:hover{background:#e2eaff}
 .lines{flex:1;display:flex;flex-direction:column;border:1.3px solid var(--borde);min-height:120mm}
 .lgrid{display:grid;grid-template-columns:1fr 26mm 26mm 30mm}
 .lhead>div{text-align:center;padding:1.2mm 0;border-bottom:1.3px solid var(--borde);font-size:9.5pt}
@@ -80,10 +143,12 @@ main{overflow:auto;padding:16px 16px 40px}
 .rows{position:relative;padding-top:3mm}
 .lrow{position:relative;align-items:start}
 .lrow>div{padding:.8mm 1.5mm}
-.lrow textarea{font-size:9.8pt;text-transform:none}
+.lrow textarea{font-size:9.8pt}
 .lrow input{text-align:right}
-.lrow .x{position:absolute;left:-9mm;top:1mm;width:6mm;height:6mm;border-radius:50%;border:1px solid #ddd;background:#fff;color:#b3261e;cursor:pointer;font-size:11px;line-height:1;padding:0}
-.addrow{position:relative;margin:2mm 2mm;align-self:flex-start;border:1px dashed #9db6e6;background:#f5f8ff;color:#1f5fd6;border-radius:6px;padding:3px 10px;cursor:pointer;font-size:12px}
+.lrow .x{position:absolute;left:-9mm;top:1mm;width:6mm;height:6mm;border-radius:50%;border:1px solid #e5e7eb;background:#fff;color:var(--danger);cursor:pointer;font-size:11px;line-height:1;padding:0}
+.addbar{position:relative;display:flex;gap:8px;margin:2mm;font-family:"Segoe UI",system-ui,sans-serif;max-width:calc(100% - 82mm)}
+.addbar button{border:1px dashed #9db6e6;background:#f5f8ff;color:var(--pri);border-radius:8px;padding:5px 12px;cursor:pointer;font-size:12.5px;white-space:nowrap}
+.addbar select{border:1px dashed #9fd9cc!important;background:#f1fbf8!important;color:#0f7a66;border-radius:8px!important;padding:5px 8px!important;font-size:12.5px!important;cursor:pointer;min-width:0}
 .spacer{flex:1}
 .subrow{position:relative;font-weight:700;padding:2mm 0}
 .subrow .subl{text-align:right;padding-right:3mm}
@@ -96,143 +161,291 @@ main{overflow:auto;padding:16px 16px 40px}
 .tot td input{width:62%;text-align:right;display:inline-block}
 .tot td.pct input{width:45%}
 .tot .total{font-weight:700;font-size:10.5pt}
-.reset{border:0;background:none;color:#1f5fd6;cursor:pointer;font-size:11px;padding:0 2px}
+.reset{border:0;background:none;color:var(--pri);cursor:pointer;font-size:12px;padding:0 2px}
 .notas{margin-top:3mm;font-size:8pt;color:#333}
 .notas textarea{font-size:8pt}
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
-.toast.on{opacity:1}
+/* estilo moderno de factura */
+.sheet.moderna .band{border-radius:3mm;padding:4mm 0}
+.sheet.moderna .band input{font-weight:700;letter-spacing:.18em}
+.sheet.moderna .lines{border:0;border-radius:3mm;overflow:hidden;background:linear-gradient(#fff,#fff)}
+.sheet.moderna .lhead{background:var(--tabla)}
+.sheet.moderna .lhead>div{border:0;font-weight:700;font-size:8.5pt;letter-spacing:.05em;padding:2mm 0}
+.sheet.moderna .cols>div+div{border-left:1px solid #eceef2}
+.sheet.moderna .lbody{border:1px solid #eceef2;border-top:0;border-radius:0 0 3mm 3mm}
+.sheet.moderna .lrow{border-bottom:1px solid #f1f2f5}
+.sheet.moderna .tot{border:0;margin-top:4mm;border-radius:3mm;overflow:hidden}
+.sheet.moderna .tot th{border:0;font-size:7.5pt;font-weight:700;letter-spacing:.04em}
+.sheet.moderna .tot td{border:0;border-bottom:1px solid #eceef2;background:#fafbfc}
+.sheet.moderna .tot .total{background:var(--marco);color:#fff;font-size:12pt}
+/* toast */
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,10px);background:#16202e;color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:92vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- MÓVIL / TABLET ---------- */
+@media screen and (max-width:960px){
+  .brand small{max-width:150px}
+  .tb-act,.estado-d{display:none}
+  aside{position:fixed;left:0;top:0;bottom:0;width:min(90vw,400px);z-index:40;transform:translateX(-105%);box-shadow:0 0 40px rgba(0,0,0,.25);margin:0!important;padding-bottom:env(safe-area-inset-bottom)}
+  body.open aside{transform:none}
+  .overlay{display:block;position:fixed;inset:0;background:rgba(10,20,35,.45);z-index:35;opacity:0;pointer-events:none;transition:.25s}
+  body.open .overlay{opacity:1;pointer-events:auto}
+  .dhead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--brand);color:#fff;position:sticky;top:0;z-index:3;padding-top:calc(12px + env(safe-area-inset-top))}
+  .nav{top:58px}
+  .layout{height:auto;display:block}
+  main{padding:12px 10px calc(96px + env(safe-area-inset-bottom))}
+  .bottombar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+  .bottombar button{display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:none;padding:6px 2px;font-size:11.5px;color:var(--muted);border-radius:10px;cursor:pointer}
+  .bottombar button .ic{width:22px;height:22px}
+  .bottombar .pri{background:var(--pri);color:#fff}
+  .sheet{width:100%;min-height:0;padding:16px 14px 18px;border-radius:14px;font-size:14px}
+  .sheet input,.sheet textarea,.sheet select{font-size:16px!important}
+  .band{margin-bottom:14px;border-radius:10px}
+  .band input{font-size:22px!important}
+  .head{grid-template-columns:1fr;gap:12px}
+  .emisor{font-size:14px}
+  .box .lbl{font-size:10px}
+  .crow{grid-template-columns:78px 1fr;font-size:12px;padding:2px 0}
+  .client{border-radius:12px;padding:10px}
+  .lines{min-height:0;border-radius:10px;overflow:hidden}
+  .lhead,.cols{display:none}
+  .rows{padding:6px 0 0}
+  .lrow{grid-template-columns:1fr 1fr 1fr;gap:0 6px;padding:8px 8px 10px;border-bottom:1px solid #eef0f4;margin:0 0 2px}
+  .lrow>div:nth-child(2){grid-column:1/-1}
+  .lrow>div[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:#8a93a3;text-align:right;padding-right:4px}
+  .lrow .x{left:auto;right:6px;top:8px;width:28px;height:28px;z-index:2}
+  .lrow textarea{padding-right:34px}
+  .addbar{max-width:none;flex-wrap:wrap;margin:10px 8px}
+  .addbar select{flex:1}
+  .spacer{display:none}
+  .subrow{grid-template-columns:1fr auto!important;padding:10px 10px}
+  .subrow>div:nth-child(2),.subrow>div:nth-child(3){display:none}
+  .pago{width:auto;font-size:11px;padding:0 10px 12px}
+  .tot{border:0;margin-top:10px}
+  .tot thead{display:none}
+  .tot tr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tot td{border:1px solid #e5e8ee!important;border-radius:10px;padding:8px;text-align:left;background:#fafbfc!important;color:#111!important}
+  .tot td::before{content:attr(data-l);display:block;font-size:11px;color:#8a93a3;margin-bottom:2px}
+  .tot td input{width:72%!important}
+  .tot .total{grid-column:1/-1;background:var(--marco)!important;color:#fff!important;font-size:18px;border:0!important}
+  .tot .total::before{color:rgba(255,255,255,.8)}
+  .notas textarea{font-size:13px!important}
+}
+@media screen and (max-width:420px){.brand small{display:none}.chip{padding:0 9px;font-size:12px}}
+
+/* ---------- IMPRESIÓN ---------- */
 @media print{
   @page{size:A4;margin:0}
   html,body{background:#fff;height:auto}
-  .app{display:block;height:auto}
-  aside,.toolbar,.noprint,.toast{display:none!important}
+  .topbar,aside,.overlay,.bottombar,.noprint,.toast{display:none!important}
+  .layout{display:block;height:auto}
   main{padding:0;overflow:visible}
-  .sheet{box-shadow:none;margin:0;min-height:296.5mm}
+  .sheet{box-shadow:none;margin:0;min-height:296.5mm;border-radius:0}
   .sheet input,.sheet textarea{border-color:transparent!important;background:transparent!important}
   .lrow.empty{display:none}
   .box input[type=date]{display:none}
   .ftxt{display:block;padding:1px 3px}
   .notas textarea.vacio{display:none}
+  .sheet ::placeholder{color:transparent!important}
 }
 </style>
 </head>
 <body>
-<div class="app">
-<aside>
-  <div class="tabs">
-    <button data-tab="datos" class="on">Mis datos</button>
-    <button data-tab="diseno">Diseño</button>
-    <button data-tab="num">Numeración</button>
-    <button data-tab="clientes">Clientes</button>
-    <button data-tab="hist">Historial</button>
+<header class="topbar">
+  <button class="iconbtn" id="b-menu" title="Menú" aria-label="Abrir menú" data-ic="menu"></button>
+  <div class="brand">
+    <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 6h10M7 12h10M7 18h6"/></svg></div>
+    <div><b>Facturas</b><small id="brand-sub">Tu facturación, en un clic</small></div>
   </div>
+  <span class="sp"></span>
+  <button class="chip" id="b-file"></button>
+  <span class="estado estado-d" id="estado"></span>
+  <div class="tb-act">
+    <button class="btn ghost" id="b-new" data-ic="plus">Nueva</button>
+    <button class="btn ghost" id="b-dup" data-ic="copy">Duplicar</button>
+    <button class="btn ghost" id="b-save" data-ic="save">Guardar</button>
+    <button class="btn acc" id="b-pdf" data-ic="pdf">Guardar y PDF</button>
+  </div>
+</header>
 
-  <section class="panel on" id="p-datos">
-    <h3>Datos del emisor</h3>
-    <label>Nombre y apellidos</label><input data-s="emisor.nombre">
-    <label>NIF</label><input data-s="emisor.nif">
-    <label>Nº de colegiada (opcional)</label><input data-s="emisor.colegiado">
-    <label>Dirección</label><input data-s="emisor.direccion">
-    <label>CP - Ciudad</label><input data-s="emisor.poblacion" placeholder="18012 - Granada">
-    <div class="row2"><div><label>Teléfono</label><input data-s="emisor.telefono"></div><div><label>Email</label><input data-s="emisor.email"></div></div>
-    <label>IBAN</label><input data-s="emisor.iban" placeholder="ES00 0000 0000 0000 0000 0000">
-    <h3>Impuestos por defecto</h3>
-    <div class="row2"><div><label>IRPF %</label><input data-s="imp.irpf" data-num></div><div><label>IVA %</label><input data-s="imp.iva" data-num></div></div>
-    <p class="hint">IRPF 15 % general; 7 % el año de alta y los 2 siguientes. Sin retención si el cliente es un particular. Se puede cambiar en cada factura.</p>
-    <label>Texto de exención de IVA</label><textarea data-s="imp.notaIva" rows="2"></textarea>
-    <label>Texto de forma de pago ({iban} = tu IBAN)</label><textarea data-s="imp.notaPago" rows="2"></textarea>
-    <h3>Catálogo de servicios</h3>
-    <p class="hint">Aparecen en el desplegable "Añadir servicio" de arriba.</p>
-    <div id="catalogo"></div>
-    <button class="btn sm" id="cat-add" style="margin-top:8px">+ Servicio</button>
-    <p class="hint">Los cambios se guardan solos y se aplican a las facturas que guardes a partir de ahora.</p>
-  </section>
+<div class="layout">
+<aside id="drawer">
+  <div class="dhead"><b>Menú</b><button class="iconbtn" id="b-close" aria-label="Cerrar menú" data-ic="x"></button></div>
+  <nav class="nav">
+    <button data-tab="inicio" class="on" data-ic="home">Inicio</button>
+    <button data-tab="datos" data-ic="user">Mis datos</button>
+    <button data-tab="clientes" data-ic="users">Clientes</button>
+    <button data-tab="hist" data-ic="list">Facturas</button>
+    <button data-tab="diseno" data-ic="palette">Diseño</button>
+    <button data-tab="num" data-ic="hash">Numeración</button>
+    <button data-tab="copias" data-ic="db">Copias</button>
+    <button data-tab="ayuda" data-ic="help">Ayuda</button>
+  </nav>
 
-  <section class="panel" id="p-diseno">
-    <h3>Plantillas</h3>
-    <div class="presets" id="presets"></div>
-    <h3>Colores</h3>
-    <div class="colors">
-      <label><input type="color" data-s="dis.franja">Franja título</label>
-      <label><input type="color" data-s="dis.tituloColor">Texto título</label>
-      <label><input type="color" data-s="dis.tabla">Cabecera totales</label>
-      <label><input type="color" data-s="dis.marco">Recuadros</label>
-      <label><input type="color" data-s="dis.borde">Líneas tabla</label>
+  <section class="panel on" id="p-inicio">
+    <div class="ptitle" id="hello">Hola 👋</div>
+    <p class="psub" id="hello-sub">Este es el resumen de tu facturación.</p>
+    <div class="kpis">
+      <div class="kpi k1"><span>Facturado <b class="yr" style="display:inline;font-size:inherit"></b></span><b id="k-total">0,00 €</b><small id="k-count">0 facturas</small></div>
+      <div class="kpi k2"><span>Este mes</span><b id="k-mes">0,00 €</b><small id="k-mes-n">0 facturas</small></div>
+      <div class="kpi k3"><span>Base imponible</span><b id="k-base">0,00 €</b><small>Sin impuestos</small></div>
+      <div class="kpi k4"><span>IRPF retenido</span><b id="k-irpf">0,00 €</b><small>A descontar en tu renta</small></div>
     </div>
-    <h3>Tipografía</h3>
-    <select data-s="dis.font">
-      <option value="Arial, Helvetica, sans-serif">Arial (clásica)</option>
-      <option value="'Segoe UI', Calibri, sans-serif">Segoe / Calibri (moderna)</option>
-      <option value="Georgia, 'Times New Roman', serif">Georgia (elegante)</option>
-      <option value="Verdana, Geneva, sans-serif">Verdana (muy legible)</option>
-    </select>
-    <h3>Logo</h3>
-    <input type="file" id="logo-file" accept="image/*">
-    <button class="btn sm del" id="logo-del" style="margin-top:6px">Quitar logo</button>
-    <p class="hint">El título "FACTURA" se edita directamente en la hoja.</p>
+    <div class="card" id="setup">
+      <h4>Primeros pasos</h4>
+      <div id="checks"></div>
+    </div>
+    <div class="card">
+      <h4>Últimas facturas</h4>
+      <div class="list" id="recent"></div>
+    </div>
   </section>
 
-  <section class="panel" id="p-num">
-    <h3>Formato del número</h3>
-    <select data-s="num.formato" id="fmt-sel">
-      <option value="{n}{yyyy}">152026 (número + año)</option>
-      <option value="{n}/{yyyy}">15/2026</option>
-      <option value="{yyyy}-{n}">2026-015</option>
-      <option value="F{yyyy}{n}">F2026015</option>
-    </select>
-    <label>Cifras mínimas del número</label>
-    <select data-s="num.pad" data-num>
-      <option value="0">Sin ceros (15)</option><option value="3">3 (015)</option><option value="4">4 (0015)</option>
-    </select>
-    <label id="ini-lbl">Primer número a usar este año</label>
-    <input id="ini-n" type="number" min="1">
-    <p class="hint">Si ya emitiste facturas fuera de la app este año (p. ej. hasta la 15), pon aquí el siguiente (16). La numeración empieza en 1 cada año y la app nunca repite un número.</p>
-    <p class="hint" style="font-size:14px;color:#222">Próxima factura: <b id="next-prev"></b></p>
+  <section class="panel" id="p-datos">
+    <div class="ptitle">Mis datos</div>
+    <p class="psub">Aparecen en la cabecera de cada factura.</p>
+    <div class="card">
+      <h4>Datos fiscales</h4>
+      <label>Nombre y apellidos</label><input data-s="emisor.nombre" autocomplete="name">
+      <div class="row2"><div><label>NIF</label><input data-s="emisor.nif"></div><div><label>Nº colegiada</label><input data-s="emisor.colegiado" placeholder="Opcional"></div></div>
+      <label>Dirección</label><input data-s="emisor.direccion" autocomplete="street-address">
+      <label>CP - Ciudad</label><input data-s="emisor.poblacion" placeholder="18012 - Granada">
+      <div class="row2"><div><label>Teléfono</label><input data-s="emisor.telefono" inputmode="tel"></div><div><label>Email</label><input data-s="emisor.email" inputmode="email"></div></div>
+      <label>IBAN</label><input data-s="emisor.iban" placeholder="ES00 0000 0000 0000 0000 0000">
+    </div>
+    <div class="card">
+      <h4>Impuestos por defecto</h4>
+      <div class="row2"><div><label>IRPF %</label><input data-s="imp.irpf" data-num inputmode="decimal"></div><div><label>IVA %</label><input data-s="imp.iva" data-num inputmode="decimal"></div></div>
+      <p class="hint">IRPF 15 % general · 7 % el año de alta y los 2 siguientes · 0 % si el cliente es un particular. Se puede cambiar en cada factura.</p>
+      <label>Texto de exención de IVA</label><textarea data-s="imp.notaIva" rows="2"></textarea>
+      <label>Forma de pago <span style="font-weight:400">({iban} = tu IBAN)</span></label><textarea data-s="imp.notaPago" rows="2"></textarea>
+    </div>
+    <div class="card">
+      <h4>Catálogo de servicios</h4>
+      <p class="hint" style="margin-top:0">Para añadirlos a la factura con un toque.</p>
+      <div id="catalogo"></div>
+      <button class="btn sm" id="cat-add" style="margin-top:10px" data-ic="plus">Servicio</button>
+    </div>
+    <div class="savebar"><button class="btn pri block" id="s-save" data-ic="save">Guardar mis datos</button><p class="hint" id="s-saved" style="text-align:center"></p></div>
   </section>
 
   <section class="panel" id="p-clientes">
-    <h3>Clientes guardados</h3>
-    <p class="hint">Se guardan solos al guardar una factura. También puedes escribir el nombre en la hoja y elegirlo de la lista.</p>
-    <input id="cli-q" placeholder="Buscar cliente..." style="margin-top:8px">
+    <div class="ptitle">Clientes</div>
+    <p class="psub">Guárdalos una vez y elígelos en cada factura.</p>
+    <div class="card" id="cli-form">
+      <h4 id="cf-title">Nuevo cliente</h4>
+      <label>Nombre o razón social *</label><input id="cf-nombre">
+      <div class="row2"><div><label>NIF / CIF</label><input id="cf-nif"></div><div><label>Teléfono</label><input id="cf-tel" inputmode="tel"></div></div>
+      <label>Dirección</label><input id="cf-dir">
+      <label>CP - Ciudad</label><input id="cf-pob">
+      <label>Email</label><input id="cf-email" inputmode="email">
+      <div class="btnrow"><button class="btn pri" id="cf-save" data-ic="save">Guardar cliente</button><button class="btn" id="cf-cancel">Limpiar</button></div>
+    </div>
+    <input id="cli-q" placeholder="🔍  Buscar cliente…" style="margin-top:16px">
     <div class="list" id="cli-list"></div>
   </section>
 
   <section class="panel" id="p-hist">
-    <h3>Facturas emitidas</h3>
-    <input id="h-q" placeholder="Buscar nº, cliente o fecha...">
+    <div class="ptitle">Facturas emitidas</div>
+    <p class="psub" id="h-sum">Todas tus facturas guardadas.</p>
+    <input id="h-q" placeholder="🔍  Buscar nº, cliente o fecha…">
     <div class="list" id="h-list"></div>
-    <p class="hint" id="h-sum"></p>
-    <h3>Archivo de datos</h3>
-    <p class="hint" id="file-status"></p>
-    <div class="presets" id="file-btns">
-      <button class="btn sm pri" id="f-create">Crear archivo nuevo</button>
-      <button class="btn sm" id="f-open">Abrir archivo existente</button>
-      <button class="btn sm del" id="f-unlink">Desvincular</button>
+  </section>
+
+  <section class="panel" id="p-diseno">
+    <div class="ptitle">Diseño</div>
+    <p class="psub">Los cambios se ven al momento en la factura.</p>
+    <div class="card"><h4>Estilo</h4>
+      <div class="seg" id="estilo"><button data-v="clasica">Clásico</button><button data-v="moderna">Moderno</button></div>
     </div>
-    <p class="hint">Recomendado: guárdalo dentro de tu carpeta de Google Drive u OneDrive para tener copia en la nube.</p>
-    <h3>Exportar y copias</h3>
-    <div class="presets">
-      <button class="btn sm" id="csv">Libro de facturas (Excel/CSV)</button>
-      <button class="btn sm" id="bk-exp">Copia de seguridad</button>
-      <label class="btn sm" style="margin:0;color:#222;font-size:12px">Restaurar copia<input type="file" id="bk-imp" accept=".json" hidden></label>
+    <div class="card"><h4>Paleta</h4><div class="presets" id="presets"></div></div>
+    <div class="card"><h4>Colores a medida</h4>
+      <div class="colors">
+        <label><input type="color" data-s="dis.franja">Franja título</label>
+        <label><input type="color" data-s="dis.tituloColor">Texto título</label>
+        <label><input type="color" data-s="dis.tabla">Cabeceras</label>
+        <label><input type="color" data-s="dis.marco">Recuadros</label>
+        <label><input type="color" data-s="dis.borde">Líneas</label>
+      </div>
+    </div>
+    <div class="card"><h4>Tipografía</h4>
+      <select data-s="dis.font">
+        <option value="Arial, Helvetica, sans-serif">Arial (clásica)</option>
+        <option value="'Segoe UI', Calibri, sans-serif">Segoe / Calibri (moderna)</option>
+        <option value="Georgia, 'Times New Roman', serif">Georgia (elegante)</option>
+        <option value="Verdana, Geneva, sans-serif">Verdana (muy legible)</option>
+      </select>
+    </div>
+    <div class="card"><h4>Logo</h4>
+      <input type="file" id="logo-file" accept="image/*">
+      <div class="btnrow"><button class="btn sm del" id="logo-del">Quitar logo</button></div>
+      <p class="hint">El título "FACTURA" se edita tocándolo en la hoja.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="p-num">
+    <div class="ptitle">Numeración</div>
+    <p class="psub">Correlativa y sin huecos, como exige Hacienda. Empieza en 1 cada año.</p>
+    <div class="card">
+      <h4>Próxima factura</h4>
+      <div class="next" id="next-prev"></div>
+      <label>Formato</label>
+      <select data-s="num.formato">
+        <option value="{n}{yyyy}">152026 (número + año)</option>
+        <option value="{n}/{yyyy}">15/2026</option>
+        <option value="{yyyy}-{n}">2026-015</option>
+        <option value="F{yyyy}{n}">F2026015</option>
+      </select>
+      <label>Cifras mínimas del número</label>
+      <select data-s="num.pad" data-num>
+        <option value="0">Sin ceros (15)</option><option value="3">3 cifras (015)</option><option value="4">4 cifras (0015)</option>
+      </select>
+      <label id="ini-lbl">Primer número a usar este año</label>
+      <input id="ini-n" type="number" min="1" inputmode="numeric">
+      <p class="hint">Si este año ya hiciste facturas fuera de la app (p. ej. hasta la 15), pon aquí 16.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="p-copias">
+    <div class="ptitle">Copias y archivo</div>
+    <p class="psub">Dónde se guardan tus facturas y clientes.</p>
+    <div class="card">
+      <h4>Archivo de datos</h4>
+      <p class="hint" id="file-status" style="margin-top:0"></p>
+      <div class="btnrow" id="file-btns">
+        <button class="btn pri sm" id="f-create">Crear archivo nuevo</button>
+        <button class="btn sm" id="f-open">Abrir archivo existente</button>
+        <button class="btn sm del" id="f-unlink">Desvincular</button>
+      </div>
+      <p class="hint">Consejo: guárdalo en tu carpeta de Google Drive u OneDrive y tendrás copia en la nube.</p>
+    </div>
+    <div class="card">
+      <h4>Exportar</h4>
+      <div class="btnrow" style="margin-top:4px">
+        <button class="btn sm" id="csv">Libro de facturas (Excel)</button>
+        <button class="btn sm" id="bk-exp">Descargar copia</button>
+        <label class="btn sm" style="margin:0;color:var(--ink);font-weight:400">Restaurar copia<input type="file" id="bk-imp" accept=".json,application/json" hidden></label>
+      </div>
+      <p class="hint">Cada dispositivo (PC, móvil) guarda sus propios datos. Para pasar los datos de uno a otro: "Descargar copia" en uno y "Restaurar copia" en el otro.</p>
+    </div>
+  </section>
+
+  <section class="panel" id="p-ayuda">
+    <div class="ptitle">Cómo se usa</div>
+    <div class="card">
+      <h4>Hacer una factura</h4>
+      <p class="hint" style="margin-top:0;line-height:1.6">1. Elige el cliente en el desplegable de la factura (o escríbelo y pulsa <b>Guardar cliente</b>).<br>2. Añade partidas: escribe cantidad × precio o directamente el importe.<br>3. Revisa abajo IRPF e IVA: se calculan solos y puedes cambiar los porcentajes o la base.<br>4. Pulsa <b>Guardar y PDF</b> → "Guardar como PDF".</p>
+    </div>
+    <div class="card">
+      <h4>Instalarla como app</h4>
+      <p class="hint" style="margin-top:0;line-height:1.6"><b>PC (Chrome/Edge):</b> icono ⊕ de la barra de direcciones → Instalar.<br><b>iPhone (Safari):</b> Compartir → "Añadir a pantalla de inicio". Recomendado: así Safari no borra los datos por falta de uso.<br><b>Android (Chrome):</b> menú ⋮ → "Añadir a pantalla de inicio".</p>
     </div>
   </section>
 </aside>
+<div class="overlay" id="overlay"></div>
 
 <main>
-  <div class="toolbar">
-    <button class="btn" id="b-new">+ Nueva</button>
-    <button class="btn" id="b-dup">Duplicar</button>
-    <select id="b-cat"><option value="">+ Añadir servicio…</option></select>
-    <span class="sp"></span>
-    <button class="btn sm" id="b-file"></button>
-    <span class="estado" id="estado"></span>
-    <button class="btn" id="b-save">Guardar</button>
-    <button class="btn pri" id="b-pdf">Guardar y PDF</button>
-  </div>
-
   <div class="sheet" id="sheet">
-    <div class="band"><input data-s="dis.titulo" id="d-titulo"></div>
+    <div class="band"><input data-s="dis.titulo" id="d-titulo" aria-label="Título"></div>
     <div class="head">
       <div>
         <img id="logo" class="logo" alt="">
@@ -244,9 +457,10 @@ main{overflow:auto;padding:16px 16px 40px}
       </div>
       <div class="client">
         <div class="crow"><span>CLIENTE</span><input data-c="nombre" list="dl-cli" placeholder="Nombre o razón social" autocomplete="off"></div>
-        <div class="crow"><span>NIF / CIF</span><input data-c="nif"></div>
-        <div class="crow"><span>DIRECCIÓN</span><input data-c="direccion"></div>
+        <div class="crow"><span>NIF / CIF</span><input data-c="nif" placeholder="NIF"></div>
+        <div class="crow"><span>DIRECCIÓN</span><input data-c="direccion" placeholder="Dirección"></div>
         <div class="crow"><span></span><input data-c="poblacion" placeholder="CP - Ciudad"></div>
+        <div class="cbar noprint"><select id="cli-pick"><option value="">👤 Elegir cliente guardado…</option></select><button class="mini" id="cli-save-sheet">Guardar cliente</button></div>
       </div>
     </div>
 
@@ -255,7 +469,7 @@ main{overflow:auto;padding:16px 16px 40px}
       <div class="lbody">
         <div class="lgrid cols"><div></div><div></div><div></div><div></div></div>
         <div class="rows" id="rows"></div>
-        <button class="addrow noprint" id="addrow">+ Añadir partida</button>
+        <div class="addbar noprint"><button id="addrow">+ Añadir partida</button><select id="b-cat"></select></div>
         <div class="spacer"></div>
         <div class="lgrid subrow"><div class="subl">SUBTOTAL</div><div></div><div></div><div class="r" id="t-sub"></div></div>
         <div class="pago" id="pago"></div>
@@ -264,12 +478,12 @@ main{overflow:auto;padding:16px 16px 40px}
     <table class="tot">
       <thead><tr><th>BASE IMPONIBLE</th><th>IRPF</th><th>CUOTA IRPF</th><th>TIPO IVA</th><th>IVA</th><th>TOTAL FACTURA</th></tr></thead>
       <tbody><tr>
-        <td><input id="t-base" inputmode="decimal"> €<button class="reset noprint" id="t-base-reset" title="Volver a calcular desde las partidas">↺</button></td>
-        <td class="pct"><input id="t-irpf" inputmode="decimal"> %</td>
-        <td id="t-cirpf"></td>
-        <td class="pct"><input id="t-iva" inputmode="decimal"> %</td>
-        <td id="t-civa"></td>
-        <td class="total" id="t-total"></td>
+        <td data-l="Base imponible"><input id="t-base" inputmode="decimal"> €<button class="reset noprint" id="t-base-reset" title="Volver a calcular desde las partidas">↺</button></td>
+        <td class="pct" data-l="IRPF"><input id="t-irpf" inputmode="decimal"> %</td>
+        <td id="t-cirpf" data-l="Cuota IRPF"></td>
+        <td class="pct" data-l="Tipo IVA"><input id="t-iva" inputmode="decimal"> %</td>
+        <td id="t-civa" data-l="IVA"></td>
+        <td class="total" id="t-total" data-l="Total factura"></td>
       </tr></tbody>
     </table>
     <div class="notas">
@@ -279,6 +493,13 @@ main{overflow:auto;padding:16px 16px 40px}
   </div>
 </main>
 </div>
+
+<nav class="bottombar">
+  <button id="m-menu" data-ic="menu">Menú</button>
+  <button id="m-new" data-ic="plus">Nueva</button>
+  <button id="m-save" data-ic="save">Guardar</button>
+  <button id="m-pdf" class="pri" data-ic="pdf">PDF</button>
+</nav>
 <datalist id="dl-cli"></datalist>
 <div class="toast" id="toast"></div>
 
@@ -295,27 +516,32 @@ const fmtq=n=>n==null||isNaN(n)?'':n.toLocaleString('es-ES',{maximumFractionDigi
 const today=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
 const fdate=f=>f?f.split('-').reverse().join('/'):'';
 const yearOf=f=>parseInt(String(f||'').slice(0,4))||new Date().getFullYear();
+const isMobile=()=>matchMedia('(max-width:960px)').matches;
+
+const IC={menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/>',list:'<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',palette:'<path d="M12 3a9 9 0 1 0 0 18c1.4 0 2-1 2-2 0-1.5-1.5-1.8-1.5-3s1-2 2.5-2H18a3 3 0 0 0 3-3c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10.5" cy="7" r="1.2"/><circle cx="15.5" cy="7.5" r="1.2"/>',hash:'<path d="M5 9h14M5 15h14M10 3 8 21M16 3l-2 18"/>',db:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>',plus:'<path d="M12 5v14M5 12h14"/>',copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',save:'<path d="M5 3h11l5 5v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M7 3v6h9V3M7 21v-7h10v7"/>',pdf:'<path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/>'};
+$$('[data-ic]').forEach(e=>e.insertAdjacentHTML('afterbegin',`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[e.dataset.ic]}</svg>`));
 
 const PRESETS={
   'Clásica':{franja:'#c9ece6',tituloColor:'#e07a3c',tabla:'#ecea8a',marco:'#3b6fd1',borde:'#222222'},
-  'Sobria':{franja:'#efefef',tituloColor:'#222222',tabla:'#e4e4e4',marco:'#555555',borde:'#333333'},
-  'Azul':{franja:'#dbe8fb',tituloColor:'#1f4e9c',tabla:'#cfe0fa',marco:'#1f4e9c',borde:'#1f2d45'},
   'Salud':{franja:'#d8f1ea',tituloColor:'#0f7a63',tabla:'#c4ebdf',marco:'#16917a',borde:'#1d3b35'},
-  'Rosa':{franja:'#fbe3ea',tituloColor:'#b23a63',tabla:'#f7d2de',marco:'#c2547a',borde:'#3a2430'}
+  'Azul':{franja:'#dbe8fb',tituloColor:'#1f4e9c',tabla:'#cfe0fa',marco:'#1f4e9c',borde:'#1f2d45'},
+  'Sobria':{franja:'#efefef',tituloColor:'#222222',tabla:'#e4e4e4',marco:'#555555',borde:'#333333'},
+  'Rosa':{franja:'#fbe3ea',tituloColor:'#b23a63',tabla:'#f7d2de',marco:'#c2547a',borde:'#3a2430'},
+  'Lavanda':{franja:'#ebe5fb',tituloColor:'#5b3fc4',tabla:'#e0d8fa',marco:'#6d4bd1',borde:'#2b2347'}
 };
 const DEF={
   emisor:{nombre:'',nif:'',colegiado:'',direccion:'',poblacion:'',telefono:'',email:'',iban:''},
   imp:{irpf:15,iva:0,notaIva:'Operación exenta de IVA conforme al artículo 20.Uno.3º de la Ley 37/1992, del Impuesto sobre el Valor Añadido.',notaPago:'EL PAGO DE LA FACTURA SE REALIZARÁ MEDIANTE TRANSFERENCIA AL SIGUIENTE NÚMERO DE CUENTA {iban}'},
   num:{formato:'{n}{yyyy}',pad:0,inicio:{}},
-  dis:{titulo:'FACTURA',font:'Arial, Helvetica, sans-serif',logo:'',...PRESETS['Clásica']},
+  dis:{titulo:'FACTURA',font:'Arial, Helvetica, sans-serif',logo:'',estilo:'clasica',...PRESETS['Clásica']},
   catalogo:[{concepto:'Sesión de fisioterapia',precio:40}]
 };
 function deepMerge(d,s){const o=clone(d);if(!s||typeof s!=='object')return o;for(const k in s){if(o[k]&&typeof o[k]==='object'&&!Array.isArray(o[k])&&s[k]&&typeof s[k]==='object'&&!Array.isArray(s[k]))o[k]=deepMerge(o[k],s[k]);else o[k]=s[k]}return o}
 
-let DB={settings:clone(DEF),clients:[],invoices:[]};
+let DB={settings:clone(DEF),clients:[],invoices:[],savedAt:''};
 let cur=null,dirty=false,useServer=false;
 
-/* ---------- almacenamiento ---------- */
+/* ================= ALMACENAMIENTO ================= */
 const FS='showSaveFilePicker' in window;
 let fileH=null,fileOK=false;
 function idb(){return new Promise((res,rej)=>{const r=indexedDB.open('facturas',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -332,79 +558,76 @@ async function load(){
   }
   if(d&&d.settings)DB=normalize(d);
 }
-let saving=Promise.resolve();
+let saving=Promise.resolve(),lastSave=null;
 function persist(){
   DB.savedAt=new Date().toISOString();
-  const s=JSON.stringify(DB);
-  try{localStorage.setItem('facturas_db',s)}catch(e){}
-  if(useServer)saving=saving.then(()=>fetch('api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:s}).then(r=>{if(!r.ok)throw 0})).catch(()=>toast('⚠ No se pudo guardar en disco. ¿Está abierta la ventana del servidor?'));
-  else if(fileOK)saving=saving.then(()=>writeFile(s)).catch(()=>{fileOK=false;renderFileUI();toast('⚠ No se pudo escribir en el archivo de datos. Pulsa "Reconectar archivo".')});
+  const s=JSON.stringify(DB);let ok=true;
+  try{localStorage.setItem('facturas_db',s)}catch(e){ok=false}
+  if(useServer)saving=saving.then(()=>fetch('api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:s}).then(r=>{if(!r.ok)throw 0})).then(savedOk).catch(()=>toast('⚠ No se pudo guardar en disco. ¿Está abierta la ventana del servidor?'));
+  else if(fileOK)saving=saving.then(()=>writeFile(s)).then(savedOk).catch(()=>{fileOK=false;renderFileUI();toast('⚠ No se pudo escribir en el archivo. Pulsa "Reconectar archivo".')});
+  else{if(ok)savedOk();else toast('⚠ El navegador no deja guardar datos (¿modo incógnito?)');}
   return saving;
 }
+function savedOk(){lastSave=new Date();const t=lastSave.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});const el=$('#s-saved');if(el)el.textContent='✓ Guardado a las '+t}
+let pt;function persistSoon(){clearTimeout(pt);pt=setTimeout(persist,400)}
+window.addEventListener('pagehide',()=>{if(pt){clearTimeout(pt);persist()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&pt){clearTimeout(pt);pt=null;persist()}});
+
 function renderFileUI(){
   const b=$('#b-file'),st=$('#file-status');
-  if(useServer){b.style.display='none';$('#file-btns').style.display='none';st.textContent='Guardando en la carpeta "datos" del ordenador (modo servidor).';return}
-  if(!FS){b.className='btn sm warn';b.textContent='⚠ Solo en este navegador';$('#file-btns').style.display='none';st.textContent='Este navegador no permite guardar en un archivo. Usa Chrome o Edge, o haz "Copia de seguridad" a menudo.';return}
+  if(useServer){b.style.display='none';$('#file-btns').style.display='none';st.textContent='Guardando en la carpeta "datos" del ordenador.';return}
+  if(!FS){b.className='chip';b.textContent='📱 Guardado en este dispositivo';$('#file-btns').style.display='none';st.textContent='Tus datos se guardan en este dispositivo. Descarga una copia de vez en cuando para tener respaldo.';return}
   $('#f-unlink').style.display=fileH?'':'none';
-  if(fileOK){b.className='btn sm ok';b.textContent='💾 '+fileH.name;st.innerHTML='Se guarda automáticamente en <b>'+esc(fileH.name)+'</b> (y también en este navegador).'}
-  else if(fileH){b.className='btn sm warn';b.textContent='🔓 Reconectar archivo';st.innerHTML='Archivo <b>'+esc(fileH.name)+'</b> vinculado. Pulsa "Reconectar archivo" arriba para dar permiso.'}
-  else{b.className='btn sm warn';b.textContent='⚠ Guardar en archivo';st.textContent='Ahora los datos están solo en este navegador. Vincula un archivo en tu PC para no perderlos.'}
+  if(fileOK){b.className='chip ok';b.textContent='💾 '+fileH.name;st.innerHTML='Todo se guarda automáticamente en <b>'+esc(fileH.name)+'</b> y en este navegador.'}
+  else if(fileH){b.className='chip warn';b.textContent='🔓 Reconectar archivo';st.innerHTML='Archivo <b>'+esc(fileH.name)+'</b> vinculado. Pulsa "Reconectar archivo" (arriba) para dar permiso.'}
+  else{b.className='chip warn';b.textContent='⚠ Guardar en archivo';st.textContent='Ahora mismo los datos solo están en este navegador. Vincula un archivo en tu PC para no perderlos nunca.'}
 }
-function rerenderAll(){fillSettings();applyDesign();renderCatalog();renderClients();cur=newInvoice();dirty=false;renderInvoice();renderNumPanel();renderFileUI()}
 async function useFileData(fd){DB=normalize(fd);try{localStorage.setItem('facturas_db',JSON.stringify(DB))}catch(e){}rerenderAll()}
 const types=[{description:'Datos de facturas',accept:{'application/json':['.json']}}];
-async function createFile(){try{const h=await showSaveFilePicker({suggestedName:'facturas-datos.json',types});fileH=h;fileOK=true;await kv('fh',h);await persist();renderFileUI();toast('Datos guardados en '+h.name)}catch(e){if(e.name!=='AbortError')toast('No se pudo crear el archivo')}}
+async function createFile(){try{const h=await showSaveFilePicker({suggestedName:'facturas-datos.json',types});fileH=h;fileOK=true;await kv('fh',h);await persist();renderFileUI();renderHome();toast('✓ Datos guardados en '+h.name)}catch(e){if(e.name!=='AbortError')toast('No se pudo crear el archivo')}}
 async function openFile(){try{const [h]=await showOpenFilePicker({types});const fd=await readFile(h);if(!fd){toast('El archivo está vacío');return}
   if(DB.invoices.length&&!confirm(`Se cargarán los datos del archivo (${fd.invoices.length} facturas) en lugar de los de este navegador (${DB.invoices.length}). ¿Continuar?`))return;
-  fileH=h;fileOK=true;await kv('fh',h);await useFileData(fd);toast('Archivo vinculado: '+h.name)}catch(e){if(e.name!=='AbortError')toast('Archivo no válido')}}
+  fileH=h;fileOK=true;await kv('fh',h);await useFileData(fd);toast('✓ Archivo vinculado: '+h.name)}catch(e){if(e.name!=='AbortError')toast('Archivo no válido')}}
 async function reconnect(){try{if(await fileH.requestPermission({mode:'readwrite'})!=='granted')return;fileOK=true;const fd=await readFile(fileH);
-  if(fd&&(fd.savedAt||'')>(DB.savedAt||''))await useFileData(fd);else await persist();renderFileUI();toast('Archivo reconectado')}catch(e){toast('No se pudo abrir el archivo. Vuelve a vincularlo.')}}
+  if(fd&&(fd.savedAt||'')>(DB.savedAt||''))await useFileData(fd);else await persist();renderFileUI();toast('✓ Archivo reconectado')}catch(e){toast('No se pudo abrir el archivo. Vuelve a vincularlo en Copias.')}}
 $('#f-create').onclick=createFile;$('#f-open').onclick=openFile;
 $('#f-unlink').onclick=async()=>{if(!confirm('¿Desvincular el archivo? Los datos seguirán en el archivo y en este navegador.'))return;await kv('fh',null);fileH=null;fileOK=false;renderFileUI()};
-$('#b-file').onclick=()=>{if(fileH&&!fileOK)return reconnect();$('[data-tab=hist]').click()};
-let pt;function persistSoon(){clearTimeout(pt);pt=setTimeout(persist,400)}
+$('#b-file').onclick=()=>{if(fileH&&!fileOK)return reconnect();openPanel('copias')};
 
-/* ---------- numeración ---------- */
+/* ================= NUMERACIÓN ================= */
 function getPath(o,p){return p.split('.').reduce((a,k)=>a?.[k],o)}
 function setPath(o,p,v){const ks=p.split('.');const l=ks.pop();ks.reduce((a,k)=>a[k],o)[l]=v}
 function fmtNum(n,y){const s=DB.settings.num;return s.formato.replace('{n}',String(n).padStart(+s.pad||0,'0')).replace('{yyyy}',y).replace('{yy}',String(y).slice(2))}
 function numRegex(){const s=DB.settings.num.formato.replace(/[.*+?^$()|[\]\\\/-]/g,'\\$&');return new RegExp('^'+s.replace('{n}','(\\d+)').replace('{yyyy}','\\d{4}').replace('{yy}','\\d{2}')+'$')}
 function nextN(y,exceptId){const ns=DB.invoices.filter(i=>i.year===y&&i.id!==exceptId).map(i=>i.n);const ini=parseInt(DB.settings.num.inicio[y])||1;return Math.max(ini,ns.length?Math.max(...ns)+1:1)}
 
-/* ---------- factura ---------- */
+/* ================= FACTURA ================= */
 function blankLine(){return{concepto:'',cantidad:null,precio:null,importe:null}}
-function newInvoice(){
-  const f=today(),y=yearOf(f),s=DB.settings.imp;
-  return{id:null,fecha:f,year:y,n:nextN(y),manualN:false,cliente:{nombre:'',nif:'',direccion:'',poblacion:''},lineas:[blankLine()],baseManual:null,irpf:s.irpf,iva:s.iva,notaIva:s.notaIva,obs:''};
-}
-function calc(){
-  const sub=r2(cur.lineas.reduce((a,l)=>a+(l.importe||0),0));
-  const base=cur.baseManual!=null?cur.baseManual:sub;
-  const cirpf=r2(base*(cur.irpf||0)/100),civa=r2(base*(cur.iva||0)/100);
-  cur.tot={sub,base,cirpf,civa,total:r2(base+civa-cirpf)};
-  return cur.tot;
-}
+function newInvoice(){const f=today(),y=yearOf(f),s=DB.settings.imp;
+  return{id:null,fecha:f,year:y,n:nextN(y),manualN:false,cliente:{nombre:'',nif:'',direccion:'',poblacion:''},lineas:[blankLine()],baseManual:null,irpf:s.irpf,iva:s.iva,notaIva:s.notaIva,obs:''}}
+function calc(){const sub=r2(cur.lineas.reduce((a,l)=>a+(l.importe||0),0));const base=cur.baseManual!=null?cur.baseManual:sub;
+  const cirpf=r2(base*(cur.irpf||0)/100),civa=r2(base*(cur.iva||0)/100);cur.tot={sub,base,cirpf,civa,total:r2(base+civa-cirpf)};return cur.tot}
 function emisorData(){return cur.id&&cur.emisor?cur.emisor:DB.settings.emisor}
 function pagoText(){const e=emisorData();const t=cur.id&&cur.notaPago!=null?cur.notaPago:DB.settings.imp.notaPago;return e.iban?t.replace('{iban}',e.iban):''}
 
-/* ---------- render ---------- */
+/* ================= RENDER ================= */
 function applyDesign(){
   const d=DB.settings.dis,r=document.documentElement.style;
   r.setProperty('--franja',d.franja);r.setProperty('--titulo',d.tituloColor);r.setProperty('--tabla',d.tabla);r.setProperty('--marco',d.marco);r.setProperty('--borde',d.borde);r.setProperty('--font',d.font);
-  $('#logo').src=d.logo||'';if(!d.logo)$('#logo').removeAttribute('src');
+  if(d.logo)$('#logo').src=d.logo;else $('#logo').removeAttribute('src');
   if(document.activeElement!==$('#d-titulo'))$('#d-titulo').value=d.titulo;
+  $('#sheet').classList.toggle('moderna',d.estilo==='moderna');
+  $$('#estilo button').forEach(b=>b.classList.toggle('on',b.dataset.v===(d.estilo||'clasica')));
 }
 function renderEmisor(){
   const e=emisorData();
-  if(!e.nombre&&!e.nif){$('#emisor').innerHTML='<span class="vacio noprint">Rellena tus datos en "Mis datos" →</span>';return}
+  $('#brand-sub').textContent=DB.settings.emisor.nombre||'Tu facturación, en un clic';
+  if(!e.nombre&&!e.nif){$('#emisor').innerHTML='<span class="vacio noprint" onclick="openPanel(\'datos\')">✏️ Toca aquí para poner tus datos</span>';$('#pago').textContent='';return}
   const l=[`<b>${esc(e.nombre)}</b>`];
-  if(e.nif)l.push('NIF: '+esc(e.nif));
-  if(e.colegiado)l.push('Nº colegiada: '+esc(e.colegiado));
-  if(e.direccion)l.push(esc(e.direccion));
-  if(e.poblacion)l.push(esc(e.poblacion));
+  if(e.nif)l.push('NIF: '+esc(e.nif));if(e.colegiado)l.push('Nº colegiada: '+esc(e.colegiado));
+  if(e.direccion)l.push(esc(e.direccion));if(e.poblacion)l.push(esc(e.poblacion));
   const c=[e.telefono,e.email].filter(Boolean).map(esc).join(' · ');if(c)l.push(c);
-  $('#emisor').innerHTML=l.join('\n');
-  $('#pago').textContent=pagoText();
+  $('#emisor').innerHTML=l.join('\n');$('#pago').textContent=pagoText();
 }
 function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
 function renderLines(){
@@ -412,14 +635,14 @@ function renderLines(){
   cur.lineas.forEach((l,i)=>{
     const empty=!l.concepto&&l.importe==null;
     const d=document.createElement('div');d.className='lgrid lrow'+(empty?' empty':'');d.dataset.i=i;
-    d.innerHTML=`<button class="x noprint" title="Quitar partida">✕</button>
+    d.innerHTML=`<button class="x noprint" title="Quitar partida" aria-label="Quitar partida">✕</button>
       <div><textarea rows="1" data-f="concepto" placeholder="Descripción del servicio">${esc(l.concepto)}</textarea></div>
-      <div><input data-f="cantidad" inputmode="decimal" value="${fmtq(l.cantidad)}"></div>
-      <div><input data-f="precio" inputmode="decimal" value="${l.precio==null?'':fmt(l.precio)+' €'}"></div>
-      <div><input data-f="importe" inputmode="decimal" value="${l.importe==null?'':fmt(l.importe)+' €'}"></div>`;
+      <div data-l="Cantidad"><input data-f="cantidad" inputmode="decimal" value="${fmtq(l.cantidad)}"></div>
+      <div data-l="Precio"><input data-f="precio" inputmode="decimal" value="${l.precio==null?'':fmt(l.precio)+' €'}"></div>
+      <div data-l="Importe"><input data-f="importe" inputmode="decimal" value="${l.importe==null?'':fmt(l.importe)+' €'}"></div>`;
     box.appendChild(d);
   });
-  $$('#rows textarea').forEach(grow);
+  requestAnimationFrame(()=>$$('#rows textarea').forEach(grow));
 }
 function renderTotals(){
   const t=calc(),a=document.activeElement;
@@ -432,93 +655,98 @@ function renderTotals(){
   $('#t-total').textContent=fmt(t.total)+' €';
   $('#t-base-reset').style.visibility=cur.baseManual!=null?'visible':'hidden';
 }
-function renderNum(){
-  if(document.activeElement!==$('#f-num'))$('#f-num').value=fmtNum(cur.n,cur.year);
-  $('#f-fecha').value=cur.fecha;$('#f-fecha-txt').textContent=fdate(cur.fecha);
-}
-function renderNotes(){
-  $('#f-notaIva').value=cur.notaIva||'';$('#f-obs').value=cur.obs||'';
-  ['#f-notaIva','#f-obs'].forEach(s=>{grow($(s));$(s).classList.toggle('vacio',!$(s).value.trim())});
-}
-function renderInvoice(){
-  renderNum();
-  $$('[data-c]').forEach(el=>el.value=cur.cliente[el.dataset.c]||'');
-  renderLines();renderTotals();renderNotes();renderEmisor();setDirty(dirty);renderHist();
-}
-function setDirty(v){dirty=v;const e=$('#estado');e.className='estado'+(v?' dirty':'');e.textContent=v?'● Sin guardar':(cur.id?'✓ Guardada':'Nueva factura')}
+function renderNum(){if(document.activeElement!==$('#f-num'))$('#f-num').value=fmtNum(cur.n,cur.year);$('#f-fecha').value=cur.fecha;$('#f-fecha-txt').textContent=fdate(cur.fecha)}
+function renderNotes(){$('#f-notaIva').value=cur.notaIva||'';$('#f-obs').value=cur.obs||'';requestAnimationFrame(()=>['#f-notaIva','#f-obs'].forEach(s=>{grow($(s));$(s).classList.toggle('vacio',!$(s).value.trim())}))}
+function renderInvoice(){renderNum();$$('[data-c]').forEach(el=>el.value=cur.cliente[el.dataset.c]||'');renderLines();renderTotals();renderNotes();renderEmisor();setDirty(dirty);renderHist();renderHome()}
+function setDirty(v){dirty=v;const e=$('#estado');e.className='estado estado-d'+(v?' dirty':'');e.textContent=v?'● Sin guardar':(cur.id?'✓ Guardada':'Nueva factura')}
 function change(){setDirty(true)}
+function rerenderAll(){fillSettings();applyDesign();renderCatalog();renderClients();cur=newInvoice();dirty=false;renderInvoice();renderNumPanel();renderFileUI()}
 
-/* ---------- panel ajustes ---------- */
+/* ---- Inicio ---- */
+function renderHome(){
+  const y=new Date().getFullYear(),m=today().slice(0,7),dy=DB.invoices.filter(i=>i.year===y),dm=DB.invoices.filter(i=>(i.fecha||'').startsWith(m));
+  const sum=(a,k)=>r2(a.reduce((s,i)=>s+(i.tot?.[k]||0),0));
+  $$('.yr').forEach(e=>e.textContent=y);
+  $('#k-total').textContent=fmt(sum(dy,'total'))+' €';$('#k-count').textContent=dy.length+(dy.length===1?' factura':' facturas');
+  $('#k-mes').textContent=fmt(sum(dm,'total'))+' €';$('#k-mes-n').textContent=dm.length+(dm.length===1?' factura':' facturas');
+  $('#k-base').textContent=fmt(sum(dy,'base'))+' €';$('#k-irpf').textContent=fmt(sum(dy,'cirpf'))+' €';
+  const n=(DB.settings.emisor.nombre||'').trim().split(' ')[0];
+  $('#hello').textContent=n?`Hola, ${n} 👋`:'Hola 👋';
+  const e=DB.settings.emisor;
+  const steps=[
+    {t:'Pon tus datos (nombre, NIF, IBAN)',ok:!!(e.nombre&&e.nif&&e.iban),go:'datos'},
+    ...(FS&&!useServer?[{t:'Guarda tus datos en un archivo del PC',ok:!!fileH,go:'copias'}]:[]),
+    {t:'Revisa el número de la próxima factura',ok:!!Object.keys(DB.settings.num.inicio).length||DB.invoices.length>0,go:'num'},
+    {t:'Guarda tu primer cliente',ok:DB.clients.length>0,go:'clientes'},
+    {t:'Emite tu primera factura',ok:DB.invoices.length>0,go:null}
+  ];
+  $('#checks').innerHTML=steps.map((s,i)=>`<div class="check${s.ok?' done':''}" data-go="${s.go||''}"><i>${s.ok?'✓':''}</i><span>${s.t}</span></div>`).join('');
+  $('#setup').style.display=steps.every(s=>s.ok)?'none':'';
+  const rec=DB.invoices.slice().sort((a,b)=>(b.updated||'').localeCompare(a.updated||'')).slice(0,5);
+  $('#recent').innerHTML=rec.map(invItem).join('')||'<div class="empty-st">Aún no hay facturas.<br>Rellena la hoja y pulsa <b>Guardar</b>.</div>';
+}
+$('#checks').onclick=e=>{const c=e.target.closest('.check');if(!c)return;if(c.dataset.go)openPanel(c.dataset.go);else closeDrawer()};
+function invItem(i){return `<div class="item${cur&&i.id===cur.id?' cur':''}" data-id="${i.id}"><div class="top"><div class="who"><div class="av">${esc((i.cliente.nombre||'?').trim().charAt(0).toUpperCase())}</div><div><b>${esc(i.numero)}</b><div class="sub">${fdate(i.fecha)} · ${esc(i.cliente.nombre)}</div></div></div><span class="amt">${fmt(i.tot.total)} €</span></div><div class="act"><button class="btn sm" data-a="open">Abrir</button><button class="btn sm" data-a="dup">Duplicar</button><button class="btn sm del" data-a="del">Borrar</button></div></div>`}
+
+/* ================= AJUSTES ================= */
 function fillSettings(){$$('[data-s]').forEach(el=>{if(el.type!=='file')el.value=getPath(DB.settings,el.dataset.s)??''})}
 function bindSettings(){
   $$('[data-s]').forEach(el=>{
     el.addEventListener('input',()=>{
-      let val=el.hasAttribute('data-num')?(parse(el.value)??0):el.value;
-      setPath(DB.settings,el.dataset.s,val);
-      const p=el.dataset.s;
+      const val=el.hasAttribute('data-num')?(parse(el.value)??0):el.value,p=el.dataset.s;
+      setPath(DB.settings,p,val);
       if(p.startsWith('dis.'))applyDesign();
       if(p.startsWith('emisor.')||p==='imp.notaPago')renderEmisor();
-      if(p.startsWith('num.')){renderNumPanel();if(!cur.id&&!cur.manualN)cur.n=nextN(cur.year);renderNum()}
+      if(p.startsWith('num.')){if(!cur.id&&!cur.manualN)cur.n=nextN(cur.year);renderNum();renderNumPanel()}
       if(p==='imp.notaIva'&&!cur.id){cur.notaIva=val;renderNotes()}
       if((p==='imp.irpf'||p==='imp.iva')&&!cur.id){cur[p.slice(4)]=val;renderTotals()}
-      persistSoon();
+      $('#s-saved').textContent='Guardando…';persistSoon();
     });
   });
 }
-function renderNumPanel(){
-  const y=cur?cur.year:new Date().getFullYear();
-  $('#ini-lbl').textContent='Primer número a usar en '+y;
-  $('#ini-n').value=DB.settings.num.inicio[y]||'';$('#ini-n').placeholder='1';
-  $('#next-prev').textContent=fmtNum(nextN(y),y);
-}
+$('#s-save').onclick=async()=>{clearTimeout(pt);pt=null;await persist();renderHome();toast('✓ Tus datos están guardados')};
+function renderNumPanel(){const y=cur?cur.year:new Date().getFullYear();$('#ini-lbl').textContent='Primer número a usar en '+y;$('#ini-n').value=DB.settings.num.inicio[y]||'';$('#ini-n').placeholder='1';$('#next-prev').textContent=fmtNum(nextN(y),y)}
 $('#ini-n').addEventListener('input',e=>{const y=cur.year,v=parseInt(e.target.value);if(v>0)DB.settings.num.inicio[y]=v;else delete DB.settings.num.inicio[y];if(!cur.id&&!cur.manualN)cur.n=nextN(y);renderNum();renderNumPanel();persistSoon()});
 
-function renderCatalog(){
-  const c=DB.settings.catalogo;
-  $('#catalogo').innerHTML=c.map((s,i)=>`<div class="cat" data-i="${i}"><input data-k="concepto" value="${esc(s.concepto)}" placeholder="Servicio"><input data-k="precio" value="${fmt(s.precio)}" placeholder="Precio"><button class="btn sm del" title="Quitar">✕</button></div>`).join('');
-  $('#b-cat').innerHTML='<option value="">+ Añadir servicio…</option>'+c.map((s,i)=>`<option value="${i}">${esc(s.concepto)} — ${fmt(s.precio)} €</option>`).join('');
-}
-$('#catalogo').addEventListener('input',e=>{const r=e.target.closest('.cat');if(!r)return;const s=DB.settings.catalogo[r.dataset.i];if(e.target.dataset.k==='precio')s.precio=parse(e.target.value)??0;else s.concepto=e.target.value;
-  const keep=$('#b-cat');keep.innerHTML='<option value="">+ Añadir servicio…</option>'+DB.settings.catalogo.map((s,i)=>`<option value="${i}">${esc(s.concepto)} — ${fmt(s.precio)} €</option>`).join('');persistSoon()});
+function catOptions(){$('#b-cat').innerHTML='<option value="">⚡ Añadir servicio…</option>'+DB.settings.catalogo.filter(s=>s.concepto).map((s,i)=>`<option value="${DB.settings.catalogo.indexOf(s)}">${esc(s.concepto)} — ${fmt(s.precio)} €</option>`).join('')}
+function renderCatalog(){$('#catalogo').innerHTML=DB.settings.catalogo.map((s,i)=>`<div class="cat" data-i="${i}"><input data-k="concepto" value="${esc(s.concepto)}" placeholder="Servicio"><input data-k="precio" value="${fmt(s.precio)}" placeholder="Precio" inputmode="decimal"><button class="btn sm del" title="Quitar">✕</button></div>`).join('');catOptions()}
+$('#catalogo').addEventListener('input',e=>{const r=e.target.closest('.cat');if(!r)return;const s=DB.settings.catalogo[r.dataset.i];if(e.target.dataset.k==='precio')s.precio=parse(e.target.value)??0;else s.concepto=e.target.value;catOptions();persistSoon()});
 $('#catalogo').addEventListener('click',e=>{if(!e.target.matches('button'))return;DB.settings.catalogo.splice(e.target.closest('.cat').dataset.i,1);renderCatalog();persistSoon()});
 $('#cat-add').onclick=()=>{DB.settings.catalogo.push({concepto:'',precio:0});renderCatalog();persistSoon();$('#catalogo .cat:last-child input').focus()};
 $('#b-cat').onchange=e=>{const s=DB.settings.catalogo[e.target.value];e.target.value='';if(!s)return;
-  const l={concepto:s.concepto,cantidad:1,precio:s.precio,importe:r2(s.precio)};
-  const last=cur.lineas[cur.lineas.length-1];
-  if(last&&!last.concepto&&last.importe==null)cur.lineas[cur.lineas.length-1]=l;else cur.lineas.push(l);
-  renderLines();renderTotals();change()};
+  const l={concepto:s.concepto,cantidad:1,precio:s.precio,importe:r2(s.precio)},last=cur.lineas[cur.lineas.length-1];
+  if(last&&!last.concepto&&last.importe==null)cur.lineas[cur.lineas.length-1]=l;else cur.lineas.push(l);renderLines();renderTotals();change()};
 
-$('#presets').innerHTML=Object.keys(PRESETS).map(k=>`<button class="btn sm" data-p="${k}"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${PRESETS[k].franja};border:1px solid ${PRESETS[k].marco};margin-right:5px"></span>${k}</button>`).join('');
-$('#presets').onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;Object.assign(DB.settings.dis,PRESETS[b.dataset.p]);$$('#p-diseno [data-s]').forEach(el=>{if(el.type!=='file')el.value=getPath(DB.settings,el.dataset.s)});applyDesign();persistSoon()};
+$('#presets').innerHTML=Object.entries(PRESETS).map(([k,p])=>`<button class="preset" data-p="${k}"><div class="sw"><i style="background:${p.franja}"></i><i style="background:${p.tabla}"></i><i style="background:${p.marco}"></i><i style="background:${p.tituloColor}"></i></div>${k}</button>`).join('');
+$('#presets').onclick=e=>{const b=e.target.closest('[data-p]');if(!b)return;Object.assign(DB.settings.dis,PRESETS[b.dataset.p]);fillSettings();applyDesign();persistSoon()};
+$('#estilo').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;DB.settings.dis.estilo=b.dataset.v;applyDesign();persistSoon()};
 $('#logo-file').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image(),rd=new FileReader();
-  rd.onload=()=>{img.onload=()=>{const k=Math.min(1,600/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=img.width*k;c.height=img.height*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);DB.settings.dis.logo=c.toDataURL('image/png');applyDesign();persistSoon()};img.src=rd.result};rd.readAsDataURL(f)};
+  rd.onload=()=>{img.onload=()=>{const k=Math.min(1,600/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=img.width*k;c.height=img.height*k;c.getContext('2d').drawImage(img,0,0,c.width,c.height);DB.settings.dis.logo=c.toDataURL('image/png');applyDesign();persistSoon();toast('✓ Logo añadido')};img.src=rd.result};rd.readAsDataURL(f)};
 $('#logo-del').onclick=()=>{DB.settings.dis.logo='';$('#logo-file').value='';applyDesign();persistSoon()};
 
-/* ---------- eventos hoja ---------- */
+/* ================= EVENTOS HOJA ================= */
 $('#rows').addEventListener('input',e=>{
-  const el=e.target,i=+el.closest('.lrow').dataset.i,l=cur.lineas[i],f=el.dataset.f;
+  const el=e.target,row=el.closest('.lrow'),l=cur.lineas[+row.dataset.i],f=el.dataset.f;
   if(f==='concepto'){l.concepto=el.value;grow(el)}
-  else{
-    l[f]=parse(el.value);
-    const row=el.closest('.lrow');
-    if(f==='cantidad'||f==='precio'){if(l.cantidad!=null&&l.precio!=null){l.importe=r2(l.cantidad*l.precio);row.querySelector('[data-f=importe]').value=fmt(l.importe)+' €'}}
+  else{l[f]=parse(el.value);
+    if((f==='cantidad'||f==='precio')&&l.cantidad!=null&&l.precio!=null){l.importe=r2(l.cantidad*l.precio);row.querySelector('[data-f=importe]').value=fmt(l.importe)+' €'}
     if(f==='importe'&&l.cantidad&&l.importe!=null){l.precio=r2(l.importe/l.cantidad);row.querySelector('[data-f=precio]').value=fmt(l.precio)+' €'}
-    renderTotals();
-  }
-  el.closest('.lrow').classList.toggle('empty',!l.concepto&&l.importe==null);
-  change();
+    renderTotals()}
+  row.classList.toggle('empty',!l.concepto&&l.importe==null);change();
 });
 $('#rows').addEventListener('focusin',e=>{const el=e.target;if(el.tagName==='INPUT'){const v=cur.lineas[+el.closest('.lrow').dataset.i][el.dataset.f];el.value=v==null?'':String(v).replace('.',',');el.select()}});
 $('#rows').addEventListener('focusout',e=>{const el=e.target;if(el.tagName!=='INPUT')return;const v=cur.lineas[+el.closest('.lrow').dataset.i][el.dataset.f];el.value=v==null?'':(el.dataset.f==='cantidad'?fmtq(v):fmt(v)+' €')});
 $('#rows').addEventListener('click',e=>{if(!e.target.matches('.x'))return;cur.lineas.splice(+e.target.closest('.lrow').dataset.i,1);if(!cur.lineas.length)cur.lineas.push(blankLine());renderLines();renderTotals();change()});
-$('#addrow').onclick=()=>{cur.lineas.push(blankLine());renderLines();change();$('#rows .lrow:last-child textarea').focus()};
+$('#addrow').onclick=()=>{cur.lineas.push(blankLine());renderLines();change();setTimeout(()=>$('#rows .lrow:last-child textarea').focus(),30)};
 
 $$('[data-c]').forEach(el=>el.addEventListener('input',()=>{
   cur.cliente[el.dataset.c]=el.value;
-  if(el.dataset.c==='nombre'){const c=DB.clients.find(c=>c.nombre.toLowerCase()===el.value.trim().toLowerCase());if(c&&c.nombre===el.value){useClient(c,false)}}
+  if(el.dataset.c==='nombre'){const c=DB.clients.find(c=>c.nombre===el.value);if(c)useClient(c,false)}
   change();
 }));
 function useClient(c,full=true){cur.cliente={nombre:c.nombre,nif:c.nif||'',direccion:c.direccion||'',poblacion:c.poblacion||''};$$('[data-c]').forEach(el=>{if(full||el.dataset.c!=='nombre')el.value=cur.cliente[el.dataset.c]});change()}
+$('#cli-pick').onchange=e=>{const c=DB.clients.find(x=>x.id===e.target.value);e.target.value='';if(c){useClient(c);toast('Cliente: '+c.nombre)}};
+$('#cli-save-sheet').onclick=async()=>{if(!cur.cliente.nombre.trim()){toast('Escribe primero el nombre del cliente');$('[data-c=nombre]').focus();return}const isNew=upsertClient(cur.cliente);await persist();renderClients();renderHome();toast(isNew?'✓ Cliente guardado':'✓ Cliente actualizado')};
 
 const pctIn=(sel,key)=>{$(sel).addEventListener('input',e=>{cur[key]=parse(e.target.value)??0;renderTotals();change()});$(sel).addEventListener('blur',renderTotals)};
 pctIn('#t-irpf','irpf');pctIn('#t-iva','iva');
@@ -528,96 +756,117 @@ $('#t-base').addEventListener('blur',renderTotals);
 $('#t-base-reset').onclick=()=>{cur.baseManual=null;renderTotals();change()};
 $('#f-notaIva').addEventListener('input',e=>{cur.notaIva=e.target.value;grow(e.target);e.target.classList.toggle('vacio',!e.target.value.trim());change()});
 $('#f-obs').addEventListener('input',e=>{cur.obs=e.target.value;grow(e.target);e.target.classList.toggle('vacio',!e.target.value.trim());change()});
-$('#f-fecha').addEventListener('change',e=>{cur.fecha=e.target.value||today();const y=yearOf(cur.fecha);if(y!==cur.year){cur.year=y;if(!cur.manualN||!cur.id)cur.n=nextN(y,cur.id);cur.manualN=false}renderNum();renderNumPanel();change()});
-$('#f-num').addEventListener('change',e=>{
-  const m=e.target.value.trim().match(numRegex());
-  if(!m){toast('Formato no válido. Ejemplo: '+fmtNum(cur.n,cur.year));renderNum();return}
-  cur.n=parseInt(m[1]);cur.manualN=true;renderNum();change();
-});
+$('#f-fecha').addEventListener('change',e=>{cur.fecha=e.target.value||today();const y=yearOf(cur.fecha);if(y!==cur.year){cur.year=y;cur.n=nextN(y,cur.id);cur.manualN=false}renderNum();renderNumPanel();change()});
+$('#f-num').addEventListener('change',e=>{const m=e.target.value.trim().match(numRegex());if(!m){toast('Formato no válido. Ejemplo: '+fmtNum(cur.n,cur.year));renderNum();return}cur.n=parseInt(m[1]);cur.manualN=true;renderNum();change()});
 
-/* ---------- guardar ---------- */
+/* ================= GUARDAR ================= */
 async function save(){
   calc();
   if(!cur.cliente.nombre.trim()){toast('Falta el nombre del cliente');$('[data-c=nombre]').focus();return false}
-  if(!cur.lineas.some(l=>l.concepto.trim()||l.importe)){toast('Añade al menos una partida');return false}
+  if(!cur.lineas.some(l=>l.concepto.trim()||l.importe)){toast('Añade al menos una partida con importe');return false}
   const rep=DB.invoices.find(i=>i.year===cur.year&&i.n===cur.n&&i.id!==cur.id);
   if(rep){toast(`El nº ${rep.numero} ya existe (cliente ${rep.cliente.nombre}).`);return false}
   if(!cur.id){const exp=nextN(cur.year);if(cur.n>exp&&!confirm(`Vas a saltarte números (el siguiente correlativo es ${fmtNum(exp,cur.year)}). Hacienda exige numeración correlativa. ¿Guardar igualmente?`))return false}
   cur.numero=fmtNum(cur.n,cur.year);
   cur.lineas=cur.lineas.filter(l=>l.concepto.trim()||l.importe!=null);if(!cur.lineas.length)cur.lineas.push(blankLine());
   cur.emisor=clone(DB.settings.emisor);cur.notaPago=DB.settings.imp.notaPago;cur.updated=new Date().toISOString();
-  if(!cur.id){cur.id=uid();DB.invoices.push(clone(cur))}else{const k=DB.invoices.findIndex(i=>i.id===cur.id);DB.invoices[k]=clone(cur)}
+  if(!cur.id){cur.id=uid();DB.invoices.push(clone(cur))}else{DB.invoices[DB.invoices.findIndex(i=>i.id===cur.id)]=clone(cur)}
   upsertClient(cur.cliente);
   await persist();
-  setDirty(false);renderInvoice();renderClients();renderNumPanel();toast('Factura '+cur.numero+' guardada');
+  setDirty(false);renderInvoice();renderClients();renderNumPanel();toast('✓ Factura '+cur.numero+' guardada');
   return true;
 }
-function upsertClient(c){if(!c.nombre.trim())return;const k=DB.clients.findIndex(x=>(c.nif&&x.nif===c.nif)||x.nombre.toLowerCase()===c.nombre.trim().toLowerCase());const v={...clone(c),nombre:c.nombre.trim()};if(k>=0)DB.clients[k]={...DB.clients[k],...v};else DB.clients.push({id:uid(),...v})}
+function upsertClient(c,extra={}){if(!c.nombre.trim())return false;const nm=c.nombre.trim().toLowerCase();
+  const k=DB.clients.findIndex(x=>(extra.id&&x.id===extra.id)||(c.nif&&x.nif&&x.nif.toUpperCase()===c.nif.trim().toUpperCase())||x.nombre.toLowerCase()===nm);
+  const v={nombre:c.nombre.trim(),nif:(c.nif||'').trim(),direccion:(c.direccion||'').trim(),poblacion:(c.poblacion||'').trim(),...extra};
+  if(k>=0){DB.clients[k]={...DB.clients[k],...v};return false}DB.clients.push({id:uid(),email:'',telefono:'',...v});return true}
 
-$('#b-save').onclick=save;
-$('#b-pdf').onclick=async()=>{if(dirty||!cur.id){if(!await save())return}
-  const t=document.title;document.title=`Factura ${cur.numero} - ${cur.cliente.nombre}`;
-  $$('.sheet textarea').forEach(grow);window.print();document.title=t};
+async function doPDF(){if(dirty||!cur.id){if(!await save())return}
+  closeDrawer();const t=document.title;document.title=`Factura ${cur.numero} - ${cur.cliente.nombre}`;
+  $$('.sheet textarea').forEach(grow);setTimeout(()=>{window.print();document.title=t},60)}
 function confirmLeave(){return !dirty||confirm('Hay cambios sin guardar en esta factura. ¿Descartarlos?')}
-$('#b-new').onclick=()=>{if(!confirmLeave())return;cur=newInvoice();dirty=false;renderInvoice();renderNumPanel()};
-function dupFrom(src){const b=clone(src);cur=newInvoice();cur.cliente=b.cliente;cur.lineas=b.lineas;cur.irpf=b.irpf;cur.iva=b.iva;cur.baseManual=b.baseManual;cur.notaIva=b.notaIva;dirty=true;renderInvoice();renderNumPanel();toast('Copia creada con el nº '+fmtNum(cur.n,cur.year))}
+function doNew(){if(!confirmLeave())return;cur=newInvoice();dirty=false;renderInvoice();renderNumPanel();closeDrawer();main.scrollTo({top:0,behavior:'smooth'});toast('Nueva factura nº '+fmtNum(cur.n,cur.year))}
+function dupFrom(src){const b=clone(src);cur=newInvoice();Object.assign(cur,{cliente:b.cliente,lineas:b.lineas,irpf:b.irpf,iva:b.iva,baseManual:b.baseManual,notaIva:b.notaIva});dirty=true;renderInvoice();renderNumPanel();closeDrawer();toast('Copia creada con el nº '+fmtNum(cur.n,cur.year))}
+const main=$('main');
+$('#b-save').onclick=$('#m-save').onclick=save;
+$('#b-pdf').onclick=$('#m-pdf').onclick=doPDF;
+$('#b-new').onclick=$('#m-new').onclick=doNew;
 $('#b-dup').onclick=()=>{if(confirmLeave())dupFrom(cur)};
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
 
-/* ---------- historial y clientes ---------- */
+/* ================= FACTURAS Y CLIENTES ================= */
 function renderHist(){
   const q=$('#h-q').value.trim().toLowerCase();
   const list=DB.invoices.slice().sort((a,b)=>b.year-a.year||b.n-a.n).filter(i=>!q||[i.numero,i.cliente.nombre,fdate(i.fecha)].join(' ').toLowerCase().includes(q));
-  $('#h-list').innerHTML=list.map(i=>`<div class="item${cur&&i.id===cur.id?' cur':''}" data-id="${i.id}"><div class="top"><b>${esc(i.numero)}</b><span>${fmt(i.tot.total)} €</span></div><div class="sub">${fdate(i.fecha)} · ${esc(i.cliente.nombre)}</div><div class="act"><button class="btn sm" data-a="open">Abrir</button><button class="btn sm" data-a="dup">Duplicar</button><button class="btn sm del" data-a="del">Borrar</button></div></div>`).join('')||'<div class="item sub">Aún no hay facturas guardadas.</div>';
+  $('#h-list').innerHTML=list.map(invItem).join('')||'<div class="empty-st">Aún no hay facturas guardadas.</div>';
   const y=cur?cur.year:new Date().getFullYear(),dy=DB.invoices.filter(i=>i.year===y);
-  $('#h-sum').textContent=dy.length?`${y}: ${dy.length} facturas · Base ${fmt(r2(dy.reduce((a,i)=>a+i.tot.base,0)))} € · IRPF retenido ${fmt(r2(dy.reduce((a,i)=>a+i.tot.cirpf,0)))} €`:'';
+  $('#h-sum').textContent=dy.length?`${y}: ${dy.length} facturas · Total ${fmt(r2(dy.reduce((a,i)=>a+i.tot.total,0)))} €`:'Todas tus facturas guardadas.';
 }
 $('#h-q').oninput=renderHist;
-$('#h-list').onclick=async e=>{
-  const b=e.target.closest('[data-a]');if(!b)return;const inv=DB.invoices.find(i=>i.id===b.closest('.item').dataset.id);
-  if(b.dataset.a==='open'){if(!confirmLeave())return;cur=clone(inv);dirty=false;renderInvoice();renderNumPanel()}
+async function invAction(e){
+  const b=e.target.closest('[data-a]');if(!b)return;const inv=DB.invoices.find(i=>i.id===b.closest('.item').dataset.id);if(!inv)return;
+  if(b.dataset.a==='open'){if(!confirmLeave())return;cur=clone(inv);dirty=false;renderInvoice();renderNumPanel();closeDrawer();toast('Factura '+inv.numero)}
   if(b.dataset.a==='dup'){if(confirmLeave())dupFrom(inv)}
   if(b.dataset.a==='del'){
     const last=nextN(inv.year)-1===inv.n;
     if(!confirm(last?`¿Borrar la factura ${inv.numero}?`:`La factura ${inv.numero} no es la última: borrarla deja un hueco en la numeración. Si ya la enviaste, lo correcto es hacer una factura rectificativa. ¿Borrar igualmente?`))return;
     DB.invoices=DB.invoices.filter(i=>i.id!==inv.id);await persist();
-    if(cur.id===inv.id){cur=newInvoice();dirty=false;renderInvoice()}renderHist();renderNumPanel();toast('Factura borrada');
-  }
-};
+    if(cur.id===inv.id){cur=newInvoice();dirty=false;renderInvoice()}renderHist();renderHome();renderNumPanel();toast('Factura borrada')}
+}
+$('#h-list').onclick=invAction;$('#recent').onclick=invAction;
+
+let editCli=null;
+const CF={nombre:'#cf-nombre',nif:'#cf-nif',direccion:'#cf-dir',poblacion:'#cf-pob',email:'#cf-email',telefono:'#cf-tel'};
+function clearCF(){editCli=null;Object.values(CF).forEach(s=>$(s).value='');$('#cf-title').textContent='Nuevo cliente';$('#cf-save').lastChild.textContent='Guardar cliente'}
+$('#cf-cancel').onclick=clearCF;
+$('#cf-save').onclick=async()=>{const c={};for(const k in CF)c[k]=$(CF[k]).value.trim();
+  if(!c.nombre){toast('El nombre es obligatorio');$('#cf-nombre').focus();return}
+  const {email,telefono}=c;const isNew=upsertClient(c,editCli?{id:editCli,email,telefono}:{email,telefono});
+  await persist();renderClients();renderHome();toast(editCli||!isNew?'✓ Cliente actualizado':'✓ Cliente guardado');clearCF()};
 function renderClients(){
   const q=$('#cli-q').value.trim().toLowerCase();
-  const cs=DB.clients.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre)).filter(c=>!q||(c.nombre+' '+c.nif).toLowerCase().includes(q));
-  $('#cli-list').innerHTML=cs.map(c=>`<div class="item" data-id="${c.id}"><div class="top"><b>${esc(c.nombre)}</b><span class="sub">${esc(c.nif)}</span></div><div class="sub">${esc([c.direccion,c.poblacion].filter(Boolean).join(', '))}</div><div class="act"><button class="btn sm" data-a="use">Usar en la factura</button><button class="btn sm del" data-a="del">Borrar</button></div></div>`).join('')||'<div class="item sub">Sin clientes todavía.</div>';
-  $('#dl-cli').innerHTML=DB.clients.map(c=>`<option value="${esc(c.nombre)}">`).join('');
+  const all=DB.clients.slice().sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  const cs=all.filter(c=>!q||(c.nombre+' '+c.nif).toLowerCase().includes(q));
+  $('#cli-list').innerHTML=cs.map(c=>{const n=DB.invoices.filter(i=>i.cliente.nombre===c.nombre).length;
+    return `<div class="item" data-id="${c.id}"><div class="top"><div class="who"><div class="av">${esc(c.nombre.charAt(0).toUpperCase())}</div><div><b>${esc(c.nombre)}</b><div class="sub">${esc([c.nif,c.poblacion].filter(Boolean).join(' · ')||'Sin NIF')}</div></div></div><span class="sub">${n} fact.</span></div><div class="act"><button class="btn sm pri" data-a="use">Usar en factura</button><button class="btn sm" data-a="edit">Editar</button><button class="btn sm del" data-a="del">Borrar</button></div></div>`}).join('')||`<div class="empty-st">${q?'Ningún cliente coincide.':'Todavía no hay clientes.<br>Añade el primero con el formulario de arriba.'}</div>`;
+  $('#dl-cli').innerHTML=all.map(c=>`<option value="${esc(c.nombre)}">`).join('');
+  $('#cli-pick').innerHTML=`<option value="">👤 ${all.length?'Elegir cliente guardado…':'Sin clientes guardados'}</option>`+all.map(c=>`<option value="${c.id}">${esc(c.nombre)}${c.nif?' · '+esc(c.nif):''}</option>`).join('');
 }
 $('#cli-q').oninput=renderClients;
 $('#cli-list').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const id=b.closest('.item').dataset.id,c=DB.clients.find(c=>c.id===id);
-  if(b.dataset.a==='use')useClient(c);
-  if(b.dataset.a==='del'&&confirm('¿Borrar el cliente '+c.nombre+'? (Sus facturas no se borran)')){DB.clients=DB.clients.filter(x=>x.id!==id);renderClients();persistSoon()}};
+  if(b.dataset.a==='use'){useClient(c);closeDrawer();toast('Cliente: '+c.nombre)}
+  if(b.dataset.a==='edit'){editCli=id;for(const k in CF)$(CF[k]).value=c[k]||'';$('#cf-title').textContent='Editar cliente';$('#cf-save').lastChild.textContent='Guardar cambios';$('#cli-form').scrollIntoView({behavior:'smooth'});$('#cf-nombre').focus()}
+  if(b.dataset.a==='del'&&confirm('¿Borrar el cliente '+c.nombre+'? (Sus facturas no se borran)')){DB.clients=DB.clients.filter(x=>x.id!==id);persist();renderClients();renderHome()}};
 
-/* ---------- exportar ---------- */
-function download(name,content,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-$('#csv').onclick=()=>{
-  const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"',n=v=>(v||0).toFixed(2).replace('.',',');
+/* ================= EXPORTAR ================= */
+function download(name,content,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500)}
+$('#csv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"',n=v=>(v||0).toFixed(2).replace('.',',');
   const rows=[['Número','Fecha','Cliente','NIF cliente','Concepto','Base imponible','IRPF %','Cuota IRPF','IVA %','Cuota IVA','Total']];
   DB.invoices.slice().sort((a,b)=>a.year-b.year||a.n-b.n).forEach(i=>rows.push([q(i.numero),fdate(i.fecha),q(i.cliente.nombre),q(i.cliente.nif),q(i.lineas.map(l=>l.concepto).join(' | ')),n(i.tot.base),n(i.irpf),n(i.tot.cirpf),n(i.iva),n(i.tot.civa),n(i.tot.total)]));
-  download('libro-facturas-emitidas.csv','﻿'+rows.map(r=>r.join(';')).join('\r\n'),'text/csv;charset=utf-8');
-};
+  download('libro-facturas-emitidas.csv','﻿'+rows.map(r=>r.join(';')).join('\r\n'),'text/csv;charset=utf-8')};
 $('#bk-exp').onclick=()=>download(`copia-facturas-${today()}.json`,JSON.stringify(DB,null,1),'application/json');
 $('#bk-imp').onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=async()=>{try{const d=JSON.parse(rd.result);if(!d.settings||!Array.isArray(d.invoices))throw 0;
-  if(!confirm(`La copia tiene ${d.invoices.length} facturas. Sustituirá los datos actuales. ¿Continuar?`))return;
-  DB=normalize(d);await persist();rerenderAll();toast('Copia restaurada')}catch(_){toast('Archivo de copia no válido')}};rd.readAsText(f);e.target.value=''};
+  if(!confirm(`La copia tiene ${d.invoices.length} facturas y ${(d.clients||[]).length} clientes. Sustituirá los datos actuales. ¿Continuar?`))return;
+  DB=normalize(d);await persist();rerenderAll();toast('✓ Copia restaurada')}catch(_){toast('Archivo de copia no válido')}};rd.readAsText(f);e.target.value=''};
 
-/* ---------- utilidades UI ---------- */
+/* ================= MENÚ Y PANELES ================= */
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3200)}
-$$('.tabs button').forEach(b=>b.onclick=()=>{$$('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.tab));if(b.dataset.tab==='hist')renderHist();if(b.dataset.tab==='clientes')renderClients()});
+function openDrawer(){if(isMobile())document.body.classList.add('open');else document.body.classList.remove('closed')}
+function closeDrawer(){document.body.classList.remove('open')}
+function toggleDrawer(){if(isMobile())document.body.classList.toggle('open');else document.body.classList.toggle('closed')}
+function openPanel(name){$$('.nav button').forEach(x=>x.classList.toggle('on',x.dataset.tab===name));$$('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+name));
+  if(name==='hist')renderHist();if(name==='clientes')renderClients();if(name==='inicio')renderHome();openDrawer();$('#drawer').scrollTop=0}
+window.openPanel=openPanel;
+$$('.nav button').forEach(b=>b.onclick=()=>openPanel(b.dataset.tab));
+$('#b-menu').onclick=toggleDrawer;$('#m-menu').onclick=openDrawer;$('#b-close').onclick=closeDrawer;$('#overlay').onclick=closeDrawer;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();save()}});
 window.addEventListener('beforeprint',()=>$$('.sheet textarea').forEach(grow));
 
-/* ---------- inicio ---------- */
+/* ================= INICIO ================= */
 (async()=>{
-  await load();
-  cur=newInvoice();
+  await load();cur=newInvoice();
   fillSettings();bindSettings();applyDesign();renderCatalog();renderClients();renderInvoice();renderNumPanel();renderFileUI();
+  if(!DB.settings.emisor.nombre)setTimeout(()=>openPanel('inicio'),50);
   window.__ready=true;
 })();
 </script>
