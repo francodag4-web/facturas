@@ -860,7 +860,9 @@ window.openPanel=openPanel;
 $$('.nav button').forEach(b=>b.onclick=()=>openPanel(b.dataset.tab));
 $('#b-menu').onclick=toggleDrawer;$('#m-menu').onclick=openDrawer;$('#b-close').onclick=closeDrawer;$('#overlay').onclick=closeDrawer;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();save()}});
-window.addEventListener('beforeprint',()=>$$('.sheet textarea').forEach(grow));
+function stripPh(){$$('.sheet [placeholder]').forEach(e=>{e.dataset.ph=e.placeholder;e.removeAttribute('placeholder')});$$('.sheet textarea').forEach(grow)}
+function restorePh(){$$('.sheet [data-ph]').forEach(e=>{e.placeholder=e.dataset.ph;delete e.dataset.ph})}
+window.addEventListener('beforeprint',stripPh);window.addEventListener('afterprint',restorePh);window.__stripPh=stripPh;
 
 /* ================= INICIO ================= */
 (async()=>{
